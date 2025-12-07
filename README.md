@@ -2,7 +2,7 @@
 
 ![Physics Simulation Demo](media/demo.gif)
 
-*(A simulation of 500+ particles with collision resolution and boundary constraints)*
+*(A simulation of 200+ particles with collision resolution and boundary constraints)*
 
 ## Overview
 A high-performance 2D physics simulation built from scratch in **C++** using the **SFML** library. 
