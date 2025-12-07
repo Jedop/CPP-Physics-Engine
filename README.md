@@ -67,6 +67,3 @@ make
 - [ ] **Spatial Partitioning:** Implement a Grid or Quadtree to optimize collision detection from $O(N^2)$ to $O(N)$.
 - [ ] **Link Constraints:** Implement distance constraints to simulate cloth and rope dynamics.
 - [ ] **Interactive Forces:** Add mouse interaction to apply external forces to the system.
-
-## License
-MIT License
