@@ -1,5 +1,8 @@
 # 2D Verlet Physics Engine
 
+**Status:** Actively in Progress
+
+
 ![Physics Simulation Demo](media/demo.gif)
 
 *(A simulation of 200+ particles with collision resolution and boundary constraints)*
