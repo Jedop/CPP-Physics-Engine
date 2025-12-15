@@ -22,7 +22,12 @@ void Renderer::DrawLinks(sf::RenderWindow& window, const std::vector<Object>& ob
     window.draw(lines);
 }
 
-void Renderer::Draw(sf::RenderWindow& window, Solver solver){
+void Renderer::DrawGrid(sf::RenderWindow& window, Solver& solver){
+    //solver.tree.draw(0, window);
+}
+
+void Renderer::Draw(sf::RenderWindow& window, Solver& solver){
     DrawObjects(window, solver.objects);
     DrawLinks(window, solver.objects, solver.links);
+    DrawGrid(window, solver);
 }

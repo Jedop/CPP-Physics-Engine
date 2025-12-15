@@ -9,5 +9,6 @@ class Renderer {
 public:
     void DrawObjects(sf::RenderWindow& window, const std::vector<Object>& objects);
     void DrawLinks(sf::RenderWindow& window, const std::vector<Object>& objects, const std::vector<Link>& links);
-    void Draw(sf::RenderWindow& window, Solver solver);
+    void DrawGrid(sf::RenderWindow& window, Solver& solver);
+    void Draw(sf::RenderWindow& window, Solver& solver);
 };
