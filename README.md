@@ -1,6 +1,6 @@
 # 2D Relativistic Physics Engine
 
-**Status:** v1.0 (Stable Release)
+**Status:** v1.0.0 (Stable Release)
 
 | **Fluid Dynamics (Quadtree)** | **Relativistic Collider** |
 |:---:|:---:|
