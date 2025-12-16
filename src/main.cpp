@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include <ctime>
+#include <cstring>
 
 #include "Link.hpp"
 #include "Object.hpp"
@@ -12,14 +13,20 @@
 #include "Input.hpp"
 #include "QuadTree.hpp"
 
-int main()
+int main(int argc, char* argv[])
 {
-    sf::Clock clock;
-    #ifdef NDEBUG
-    std::cout << "RUNNING IN RELEASE MODE (FAST)\n";
-    #else
-        std::cout << "RUNNING IN DEBUG MODE (SLOW)\n";
-    #endif
+    SceneType currentScene = SceneType::FLUID;
+    if (argc > 1) {
+        std::string arg = argv[1];
+        if (arg == "--fluid")    currentScene = SceneType::FLUID;
+        else if (arg == "--cloth")    currentScene = SceneType::CLOTH;
+        else if (arg == "--collider") currentScene = SceneType::COLLIDER;
+        else if (arg == "--pendulum") currentScene = SceneType::PENDULUM;
+        else {
+            std::cout << "Unknown argument. Available: --fluid, --cloth, --collider, --pendulum" << std::endl;
+        }
+    }
+
     std::srand(std::time(nullptr)); // seeding the rng based on current time
     auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "CMake SFML Project");
     window.setFramerateLimit(144);
@@ -32,10 +39,9 @@ int main()
     Input input;
     DragState dragState;
     
-    solver.initScene();
+    solver.initScene(currentScene);
     while (window.isOpen())
     {
-        
         frame_count++;    
         while (const std::optional event = window.pollEvent())
         {
@@ -44,23 +50,22 @@ int main()
                 window.close();
             }
         }
-        clock.restart();
-        solver.tree.build(solver.objects);
-        float buildTime = clock.getElapsedTime().asMicroseconds();
 
-        // 2. Physics
-        solver.tree.clear();
-        clock.restart();
+        // Variable Speed of Light
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
+            SPEED_OF_LIGHT += 100.0f;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
+            if (SPEED_OF_LIGHT > 500.0f) { 
+                SPEED_OF_LIGHT -= 100.0f;
+            }
+        }
+
         input.Update(window, solver.objects, dragState);
         solver.update(dt);
-        float physicsTime = clock.getElapsedTime().asMicroseconds();
-        clock.restart();
+
         window.clear();
-        renderer.Draw(window, solver);
+        renderer.Draw(window, solver, dt);
         window.display();
-        float renderTime = clock.getElapsedTime().asMicroseconds();
-        if (frame_count % 60 == 0) {
-            std::cout << "Build: " << buildTime << "us | Physics: " << physicsTime << "us | Render: " << renderTime << "us" << std::endl;
-        }
     }
 }

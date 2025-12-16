@@ -26,7 +26,6 @@ private:
         int idx = nextFreeNode;
         nextFreeNode++;
 
-        // safety check (optional but recommended)
         assert(nextFreeNode <= pool.size());
 
         reset(idx);
@@ -41,15 +40,13 @@ public:
         pool.resize(100000); 
     }
     void clear() {
-        nextFreeNode = 0; // Resets size to 0, but keeps memory capacity!
+        nextFreeNode = 0; 
     }
     void build(const std::vector<Object>& objects) {
         clear();
-        // Create Root at index 0
         allocateNode(1920/2, 1080/2, 1920, 1080, &objects);
-        
         for (int i = 0; i < objects.size(); i++) {
-            insert(0, i); // Start inserting at root (index 0)
+            insert(0, i); 
         }
     }
     void insert(int node_idx, int obj_idx){
@@ -95,7 +92,6 @@ public:
         rect.setOutlineThickness(1.0f);
         window.draw(rect);
 
-        // Recurse
         if (!pool[node_idx].isLeaf) {
             draw(pool[node_idx].children[0], window);
             draw(pool[node_idx].children[1], window);

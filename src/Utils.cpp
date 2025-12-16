@@ -2,6 +2,8 @@
 #include "Utils.hpp"
 #include <cmath>
 
+float SPEED_OF_LIGHT = 5000.0f;
+
 float length(sf::Vector2f v){
     return std::sqrt(v.x * v.x + v.y * v.y);
 }

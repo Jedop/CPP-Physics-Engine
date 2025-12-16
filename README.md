@@ -1,69 +1,90 @@
-# 2D Verlet Physics Engine
+# High-Performance 2D Relativistic Physics Engine
 
-**Status:** Actively in Progress
+**Status:** v1.0 (Stable Release)
 
+| **Fluid Dynamics (Quadtree)** | **Relativistic Collider** |
+|:---:|:---:|
+| ![Fluid Demo](assets/media/fluid.gif) | ![Relativity Demo](assets/media/collider.gif) |
+| *2,000+ particles at 144 FPS* | *Lorentz Contraction & Redshift* |
 
-![Physics Simulation Demo](media/demo.gif)
-
-*(A simulation of 200+ particles with collision resolution and boundary constraints)*
+| **Constraint Stability (Cloth)** | **Chaotic Dynamics (Pendulum)** |
+|:---:|:---:|
+| ![Cloth Demo](assets/media/cloth.gif) | ![Pendulum Demo](assets/media/pendulum.gif) |
+| *Verlet Integration with Sub-stepping* | *Sensitive dependence on initial conditions* |
 
 ## Overview
-A high-performance 2D physics simulation built from scratch in **C++** using the **SFML** library. 
+A custom-built 2D physics simulation engine written in **C++** using **SFML**. 
 
-This engine moves away from standard Euler integration, utilizing **Verlet Integration** to handle particle trajectories. This ensures greater numerical stability and energy conservation, making it ideal for simulating complex systems like particle piles, cloth, and soft bodies.
+Unlike standard rigid body simulations, this engine integrates **Special Relativity** into the solver, simulating effects like length contraction and relativistic mass scaling in real-time with a dynamically adjustable speed of light. It is optimized using a dynamic **Quadtree** spatial partitioning system, allowing for the simulation of thousands of interacting bodies at high frame rates. The user can interact dynamically by picking and dragging any object on screen.
 
 ## Key Features
-- **Verlet Integration:** Implements position-based dynamics ($x_{n+1} = 2x_n - x_{n-1} + a \cdot dt^2$) for stable trajectory calculation.
-- **Collision Resolution:** Handles particle-particle collision detection and resolution.
-- **Constraint Solving:** Implements rigid boundary constraints (walls/floor) with coefficient of restitution (energy loss).
-- **Dynamic Instancing:** Real-time object spawning with randomized properties.
-- **Render Pipeline:** Custom rendering loop using SFML shapes.
+
+### 🚀 Optimization & Architecture
+-   **Quadtree Spatial Partitioning:** Implemented a recursive Quadtree structure to optimize collision detection from $O(N^2)$ to $O(N \log N)$, enabling simulations of **5,000+ particles** in real-time at 144FPS.
+-   **Memory Management:** Trees are initialised at the start and reused to avoid memory allocation overhead.
+-   **Separation of Concerns:** Decoupled `Solver` (Physics), `Renderer` (Visuals), `Input`, and `Object`(Objects) systems for a clean, extensible architecture.
+-   **User Interaction:** Objects can be clicked and dragged dynamically using a mouse. The momentum is retained once the object is dropped(or thrown).
+
+### ⚛️ Physics & Simulation
+-   **Verlet Integration:** Uses position-based dynamics ($x_{n+1} = 2x_n - x_{n-1} + a \cdot dt^2$) with **sub-stepping** (turned off by default).
+-   **Special Relativity:**
+    -   **Kinematics:** Enforces the universal speed limit ($c$).
+    -   **Visuals:** Renders **Lorentz Contraction** (spatial squashing) and **Relativistic Doppler Shift** (Redshift/Blueshift) based on particle velocity. As a particle's velocity moves closer to the speed of light, it turns red from blue.
+    -   **Dynamics:** Collisions account for **Relativistic Mass** increase ($\gamma m_0$), causing fast particles to have higher effective inertia.
+-   **Constraints:** Distance constraints for simulating ropes, chains, and tearable cloth.
 
 ## The Math
-The core solver relies on **Verlet Integration**, which calculates the next position based on the current position and the previous position, rather than storing explicit velocity. 
 
-The update logic follows:
+### Verlet Solver
+Velocity is implicitly calculated from the difference between current and previous positions, offering superior stability over Euler methods for constrained systems.
 ```cpp
 velocity = position - last_position
 new_position = position + velocity + acceleration * (dt * dt)
 ```
-This approach implicitly handles velocity, making the system robust against the errors often found in simple Euler integration.
 
-## Build Instructions
+### Relativistic Corrections
+The engine simulates relativistic effects using the Lorentz factor $\gamma$:
+$$ \gamma = \frac{1}{\sqrt{1 - v^2/c^2}} $$
+*   **Visuals:** Objects are scaled by $1/\gamma$ along the velocity vector.
+*   **Collisions:** Collision response is weighted by relativistic mass $m = \gamma m_0$.
+
+## Build & Usage
 
 ### Prerequisites
-- C++ Compiler (G++ / Clang)
-- CMake (Version 3.10+)
-- SFML Library
+*   C++17 Compiler
+*   CMake
+*   SFML Library
 
-**Installing Dependencies (Arch/EndeavourOS):**
+### Compilation
 ```bash
-sudo pacman -S base-devel cmake sfml
-```
-
-**Installing Dependencies (Ubuntu/Debian):**
-```bash
-sudo apt install build-essential cmake libsfml-dev
-```
-
-### Compilation & Running
-```bash
-# 1. Clone the repository
 git clone https://github.com/Jedop/CPP-Physics-Engine.git
 cd CPP-Physics-Engine
-
-# 2. Create build directory
 mkdir build && cd build
-
-# 3. Compile
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make
-
-# 4. Run
-./PhysicsEngine
 ```
 
-## Future Roadmap
-- [ ] **Spatial Partitioning:** Implement a Grid or Quadtree to optimize collision detection from $O(N^2)$ to $O(N)$.
-- [ ] **Link Constraints:** Implement distance constraints to simulate cloth and rope dynamics.
-- [ ] **Interactive Forces:** Add mouse interaction to apply external forces to the system.
+### Running Scenarios
+The engine includes a CLI Scene Manager. Run the executable with flags to load specific demos:
+
+```bash
+# 1. Fluid Simulation (Performance Test)
+./bin/PhysicsEngine --fluid
+
+# 2. Relativistic Collider (High Speed Physics)
+./bin/PhysicsEngine --collider
+
+# 3. Cloth Simulation (Constraint Stability)
+./bin/PhysicsEngine --cloth
+
+# 4. Double Pendulum (Chaos Theory)
+./bin/PhysicsEngine --pendulum
+```
+**Note: Use Up/Down arrows to adjust the Speed of Light ($c$) in real-time.**
+
+## Tech Stack
+*   **Language:** C++17
+*   **Graphics:** SFML
+*   **Build System:** CMake
+
+---
