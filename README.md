@@ -19,13 +19,13 @@ Unlike standard rigid body simulations, this engine integrates **Special Relativ
 
 ## Key Features
 
-### 🚀 Optimization & Architecture
+### Optimization & Architecture
 -   **Quadtree Spatial Partitioning:** Implemented a recursive Quadtree structure to optimize collision detection from $O(N^2)$ to $O(N \log N)$, enabling simulations of **5,000+ particles** in real-time at 144FPS.
 -   **Memory Management:** Trees are initialised at the start and reused to avoid memory allocation overhead.
 -   **Separation of Concerns:** Decoupled `Solver` (Physics), `Renderer` (Visuals), `Input`, and `Object`(Objects) systems for a clean, extensible architecture.
 -   **User Interaction:** Objects can be clicked and dragged dynamically using a mouse. The momentum is retained once the object is dropped(or thrown).
 
-### ⚛️ Physics & Simulation
+### Physics & Simulation
 -   **Verlet Integration:** Uses position-based dynamics ($x_{n+1} = 2x_n - x_{n-1} + a \cdot dt^2$) with **sub-stepping** (turned off by default).
 -   **Special Relativity:**
     -   **Kinematics:** Enforces the universal speed limit ($c$).
