@@ -1,4 +1,4 @@
-# High-Performance 2D Relativistic Physics Engine
+# 2D Relativistic Physics Engine
 
 **Status:** v1.0 (Stable Release)
 
